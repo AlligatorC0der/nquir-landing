@@ -4,7 +4,7 @@ import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 const dynamodb = new DynamoDBClient({ region: "us-east-1" });
 const ses = new SESClient({ region: "us-east-1" });
 
-const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL || "joe.etherage@gmail.com";
+const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL || "joe@nquir.ai";
 const TABLE_NAME = "nquir-waitlist";
 
 export const handler = async (event) => {
@@ -22,7 +22,7 @@ export const handler = async (event) => {
 
   try {
     const body = JSON.parse(event.body || "{}");
-    const { email, name, organization, source } = body;
+    const { email, sector, source } = body;
 
     if (!email || !email.includes("@")) {
       return {
@@ -52,8 +52,7 @@ export const handler = async (event) => {
       TableName: TABLE_NAME,
       Item: {
         email: { S: email.toLowerCase() },
-        name: { S: name || "" },
-        organization: { S: organization || "" },
+        sector: { S: sector || "" },
         source: { S: source || "landing-page" },
         createdAt: { S: timestamp }
       }
@@ -68,7 +67,12 @@ export const handler = async (event) => {
           Subject: { Data: "New Nquir Waitlist Signup: " + email },
           Body: {
             Text: {
-              Data: "New waitlist signup:\n\nEmail: " + email + "\nName: " + (name || "Not provided") + "\nOrganization: " + (organization || "Not provided") + "\nSource: " + (source || "landing-page") + "\nTime: " + timestamp
+              Data: `New waitlist signup:
+
+Email: ${email}
+Sector: ${sector || "Not provided"}
+Source: ${source || "landing-page"}
+Time: ${timestamp}`
             }
           }
         }

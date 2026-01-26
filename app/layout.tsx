@@ -5,8 +5,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'nquir.ai - AI-Powered Investigation Management',
-  description: 'Professional investigation and inspection platform built for federal agencies and healthcare organizations. FedRAMP authorized, HIPAA compliant.',
+  title: 'nquir | From Evidence to Report',
+  description: 'Investigation management that guides you from scattered evidence to defensible findings. Built from 25 years of federal oversight experience.',
 }
 
 export default function RootLayout({
