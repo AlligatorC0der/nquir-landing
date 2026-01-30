@@ -43,7 +43,7 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-6">
           <div className="flex items-center justify-between h-16">
             <div className="text-lg font-semibold tracking-tight text-gray-900">
-              nquir
+              nquir <span className="text-sm font-normal text-gray-400">[in-kwire]</span>
             </div>
             <a href="#waitlist" className="px-4 py-2 text-sm font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors">
               Join Waitlist
