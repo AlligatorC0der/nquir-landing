@@ -1,9 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // SSR mode for API routes (FAQ bot)
+  // Amplify WEB_COMPUTE handles this
   images: {
-    unoptimized: true, // Required for static export
+    unoptimized: true,
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

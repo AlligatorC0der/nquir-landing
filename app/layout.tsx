@@ -1,22 +1,27 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { ChatWidget } from "@/components/chat-widget";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'nquir | From Evidence to Report',
-  description: 'Investigation management that guides you from scattered evidence to defensible findings. Built from 25 years of federal oversight experience.',
-}
+  title: "nquir | AI-Powered Platform for Compliance-Critical Work",
+  description:
+    "Professional toolkit for structured inquiries, evidence-based assessments, and compliant reporting. Built for government, healthcare, and corporate compliance.",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {children}
+        <ChatWidget />
+      </body>
     </html>
-  )
+  );
 }
