@@ -88,16 +88,18 @@ try {
 }
 
 // =============================================================================
-// Bedrock Client
+// Bedrock Client (lazy initialization to ensure env vars are loaded)
 // =============================================================================
-const client = new AnthropicBedrock({
-  awsRegion: process.env.AWS_REGION || "us-east-1",
-  ...(process.env.AWS_ACCESS_KEY_ID && {
-    awsAccessKey: process.env.AWS_ACCESS_KEY_ID,
-    awsSecretKey: process.env.AWS_SECRET_ACCESS_KEY,
-    awsSessionToken: process.env.AWS_SESSION_TOKEN,
-  }),
-});
+let client: AnthropicBedrock | null = null;
+
+function getBedrockClient(): AnthropicBedrock {
+  if (!client) {
+    client = new AnthropicBedrock({
+      awsRegion: process.env.AWS_REGION || "us-east-1",
+    });
+  }
+  return client;
+}
 
 // =============================================================================
 // System Prompt (with jailbreak protection)
@@ -212,7 +214,7 @@ export async function POST(request: NextRequest) {
       { role: "user" as const, content: sanitizedMessage },
     ];
 
-    const response = await client.messages.create({
+    const response = await getBedrockClient().messages.create({
       model: "anthropic.claude-3-haiku-20240307-v1:0",
       max_tokens: 300, // Reduced from 500 for shorter responses
       system: SYSTEM_PROMPT,
