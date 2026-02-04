@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { PainSolutionCard, FeaturePreview } from '@/components/feature-preview'
 
 export default function Home() {
   const [email, setEmail] = useState('')
@@ -136,62 +137,55 @@ export default function Home() {
           <p className="text-sm font-semibold text-emerald-600 uppercase tracking-wider mb-4">The Reality</p>
           <h2 className="text-3xl md:text-4xl font-bold mb-12 text-gray-900">Sound familiar?</h2>
 
+          <p className="text-sm text-gray-400 mb-8">Hover to see how Nquir helps →</p>
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="p-6 rounded-2xl bg-gray-50 border border-gray-100">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Evidence everywhere</h3>
-                  <p className="text-gray-500 leading-relaxed">Documents in SharePoint. Notes in Word. Emails somewhere in Outlook. Audio on a shared drive. Good luck finding it all when leadership asks.</p>
-                </div>
-              </div>
-            </div>
+            <PainSolutionCard
+              icon={
+                <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                </svg>
+              }
+              iconBg="bg-red-100"
+              title="Evidence everywhere"
+              pain="Documents in SharePoint. Notes in Word. Emails somewhere in Outlook. Audio on a shared drive. Good luck finding it all when leadership asks."
+              solution="One secure location for all evidence. Upload once, link to questions, find instantly with semantic search."
+            />
 
-            <div className="p-6 rounded-2xl bg-gray-50 border border-gray-100">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Reports that take forever</h3>
-                  <p className="text-gray-500 leading-relaxed">Two weeks writing. Another week of revisions. Then someone asks where finding #3 came from and you&apos;re digging through folders again.</p>
-                </div>
-              </div>
-            </div>
+            <PainSolutionCard
+              icon={
+                <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              }
+              iconBg="bg-orange-100"
+              title="Reports that take forever"
+              pain="Two weeks writing. Another week of revisions. Then someone asks where finding #3 came from and you're digging through folders again."
+              solution="AI drafts findings with citations already attached. Every claim traces back to evidence automatically."
+            />
 
-            <div className="p-6 rounded-2xl bg-gray-50 border border-gray-100">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Can&apos;t answer the question</h3>
-                  <p className="text-gray-500 leading-relaxed">&quot;What evidence supports this finding?&quot; It&apos;s in there. You know it&apos;s in there. But articulating exactly where, right now, off the top of your head?</p>
-                </div>
-              </div>
-            </div>
+            <PainSolutionCard
+              icon={
+                <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              }
+              iconBg="bg-amber-100"
+              title="Can't answer the question"
+              pain='"What evidence supports this finding?" It&apos;s in there. You know it&apos;s in there. But articulating exactly where, right now, off the top of your head?'
+              solution="Click any finding → see the exact evidence excerpts that support it. Instant traceability."
+            />
 
-            <div className="p-6 rounded-2xl bg-gray-50 border border-gray-100">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">The nagging worry</h3>
-                  <p className="text-gray-500 leading-relaxed">That feeling you missed something. A document you didn&apos;t review closely enough. A thread you didn&apos;t pull. It keeps you up at night.</p>
-                </div>
-              </div>
-            </div>
+            <PainSolutionCard
+              icon={
+                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              }
+              iconBg="bg-blue-100"
+              title="The nagging worry"
+              pain="That feeling you missed something. A document you didn't review closely enough. A thread you didn't pull. It keeps you up at night."
+              solution="AI searches your entire evidence collection for each question. Flags gaps before you finalize."
+            />
           </div>
         </div>
       </section>
@@ -204,62 +198,111 @@ export default function Home() {
           <p className="text-gray-500 text-lg max-w-2xl mb-16">Nquir guides you through a proven methodology—the same structure investigators use, now with assistance that actually helps.</p>
 
           {/* Workflow Steps */}
+          <p className="text-sm text-gray-400 mb-8">Hover each step for details →</p>
           <div className="grid md:grid-cols-4 gap-8 mb-16">
             {/* Step 1 */}
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-lg mb-5">
-                1
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Planning</h3>
-              <p className="text-gray-500 text-sm leading-relaxed mb-4">Define what you&apos;re investigating and what questions need answers.</p>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>&bull; Focus statement</li>
-                <li>&bull; Investigation questions</li>
-                <li>&bull; Background documents</li>
-              </ul>
-            </div>
+            <FeaturePreview
+              title="Planning Phase"
+              description="Start with clarity. Define your scope, draft key questions, and set up the investigation structure before collecting a single document."
+              details={[
+                "Focus statement keeps you on track",
+                "Questions guide evidence collection",
+                "Background docs provide context",
+                "Topics organize related questions",
+              ]}
+              trigger={
+                <div className="group">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-lg mb-5 group-hover:bg-emerald-200 transition-colors">
+                    1
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3 group-hover:text-emerald-700 transition-colors">Planning</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed mb-4">Define what you&apos;re investigating and what questions need answers.</p>
+                  <ul className="space-y-2 text-sm text-gray-400">
+                    <li>&bull; Focus statement</li>
+                    <li>&bull; Investigation questions</li>
+                    <li>&bull; Background documents</li>
+                  </ul>
+                </div>
+              }
+            />
 
             {/* Step 2 */}
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-lg mb-5">
-                2
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Collection</h3>
-              <p className="text-gray-500 text-sm leading-relaxed mb-4">Gather evidence and link it directly to your questions.</p>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>&bull; Documents &amp; records</li>
-                <li>&bull; Interview notes</li>
-                <li>&bull; Evidence linking</li>
-              </ul>
-            </div>
+            <FeaturePreview
+              title="Collection Phase"
+              description="Gather evidence systematically. Every document, interview, and record gets cataloged and linked to the questions it helps answer."
+              details={[
+                "Drag-and-drop document upload",
+                "Auto-extracts text for search",
+                "Link evidence to specific questions",
+                "Track what's collected vs. needed",
+              ]}
+              trigger={
+                <div className="group">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-lg mb-5 group-hover:bg-emerald-200 transition-colors">
+                    2
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3 group-hover:text-emerald-700 transition-colors">Collection</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed mb-4">Gather evidence and link it directly to your questions.</p>
+                  <ul className="space-y-2 text-sm text-gray-400">
+                    <li>&bull; Documents &amp; records</li>
+                    <li>&bull; Interview notes</li>
+                    <li>&bull; Evidence linking</li>
+                  </ul>
+                </div>
+              }
+            />
 
             {/* Step 3 */}
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-lg mb-5">
-                3
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Analysis</h3>
-              <p className="text-gray-500 text-sm leading-relaxed mb-4">AI assists in connecting evidence to findings—you make the calls.</p>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>&bull; Evidence synthesis</li>
-                <li>&bull; Gap identification</li>
-                <li>&bull; Self-audit checks</li>
-              </ul>
-            </div>
+            <FeaturePreview
+              title="Analysis Phase"
+              description="AI searches all your evidence for each question, surfaces relevant passages, and helps draft findings—with full citations."
+              details={[
+                "Semantic search finds relevant evidence",
+                "AI drafts analysis with citations",
+                "You review and edit every finding",
+                "Gap detection flags weak areas",
+              ]}
+              trigger={
+                <div className="group">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-lg mb-5 group-hover:bg-emerald-200 transition-colors">
+                    3
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3 group-hover:text-emerald-700 transition-colors">Analysis</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed mb-4">AI assists in connecting evidence to findings—you make the calls.</p>
+                  <ul className="space-y-2 text-sm text-gray-400">
+                    <li>&bull; Evidence synthesis</li>
+                    <li>&bull; Gap identification</li>
+                    <li>&bull; Self-audit checks</li>
+                  </ul>
+                </div>
+              }
+            />
 
             {/* Step 4 */}
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-lg mb-5">
-                4
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Reporting</h3>
-              <p className="text-gray-500 text-sm leading-relaxed mb-4">Generate a professional report with every finding traced to evidence.</p>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>&bull; Cited findings</li>
-                <li>&bull; Evidence endnotes</li>
-                <li>&bull; Export-ready</li>
-              </ul>
-            </div>
+            <FeaturePreview
+              title="Reporting Phase"
+              description="Generate polished reports where every finding links to supporting evidence. Export-ready for leadership review."
+              details={[
+                "Professional report templates",
+                "Findings with inline citations",
+                "Evidence appendix auto-generated",
+                "Export to Word or PDF",
+              ]}
+              trigger={
+                <div className="group">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-lg mb-5 group-hover:bg-emerald-200 transition-colors">
+                    4
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3 group-hover:text-emerald-700 transition-colors">Reporting</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed mb-4">Generate a professional report with every finding traced to evidence.</p>
+                  <ul className="space-y-2 text-sm text-gray-400">
+                    <li>&bull; Cited findings</li>
+                    <li>&bull; Evidence endnotes</li>
+                    <li>&bull; Export-ready</li>
+                  </ul>
+                </div>
+              }
+            />
           </div>
 
           {/* AI Section */}
