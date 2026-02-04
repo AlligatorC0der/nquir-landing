@@ -141,8 +141,28 @@ The FAQ bot uses:
 
 To update FAQ content, edit `content/faq-knowledge.md`.
 
+## Monitoring & Alerts
+
+Deploy CloudWatch alarms to detect bot abuse:
+
+```bash
+cd infrastructure/terraform
+cp terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars with your email
+
+terraform init
+terraform apply
+```
+
+**Alarms:**
+- `bedrock-high-usage`: >500 requests/hour
+- `bedrock-spike`: >100 requests in 5 minutes
+
+You'll receive email alerts when thresholds are exceeded.
+
 ## Notes
 
 - Uses SSR mode (not static export) to support the chat API
 - Chat widget appears on all pages (bottom-right corner)
 - Login/Signup buttons link to `app.nquir.ai` subdomain
+- Bot protection: honeypot + rate limiting (10/min, 50/day per IP)
