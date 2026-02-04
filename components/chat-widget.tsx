@@ -28,9 +28,23 @@ export function ChatWidget() {
     scrollToBottom();
   }, [messages]);
 
+  // Honeypot field - bots fill this, humans never see it
+  const [honeypot, setHoneypot] = useState("");
+
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
+
+    // If honeypot is filled, silently reject (bot detected)
+    if (honeypot) {
+      setMessages((prev) => [
+        ...prev,
+        { role: "user", content: input.trim() },
+        { role: "assistant", content: "Thanks for your message! Join our waitlist for more information." },
+      ]);
+      setInput("");
+      return;
+    }
 
     const userMessage = input.trim();
     setInput("");
@@ -174,6 +188,17 @@ export function ChatWidget() {
             onSubmit={sendMessage}
             className="border-t border-gray-200 p-3 bg-white"
           >
+            {/* Honeypot field - hidden from humans, bots auto-fill it */}
+            <input
+              type="text"
+              name="website"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+              autoComplete="off"
+              tabIndex={-1}
+              aria-hidden="true"
+              style={{ position: "absolute", left: "-9999px", opacity: 0 }}
+            />
             <div className="flex gap-2">
               <input
                 type="text"
