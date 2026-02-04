@@ -94,8 +94,17 @@ let client: AnthropicBedrock | null = null;
 
 function getBedrockClient(): AnthropicBedrock {
   if (!client) {
+    // Debug: log which env vars are present
+    console.log("[Bedrock] Initializing client with:", {
+      hasAccessKey: !!process.env.AWS_ACCESS_KEY_ID,
+      hasSecretKey: !!process.env.AWS_SECRET_ACCESS_KEY,
+      region: process.env.AWS_REGION || "us-east-1",
+    });
+
     client = new AnthropicBedrock({
       awsRegion: process.env.AWS_REGION || "us-east-1",
+      awsAccessKey: process.env.AWS_ACCESS_KEY_ID,
+      awsSecretKey: process.env.AWS_SECRET_ACCESS_KEY,
     });
   }
   return client;
