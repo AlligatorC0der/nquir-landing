@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import AnthropicBedrock from "@anthropic-ai/bedrock-sdk";
-import { fromEnv, fromContainerMetadata } from "@aws-sdk/credential-providers";
 import { readFileSync } from "fs";
 import { join } from "path";
 
@@ -97,31 +96,25 @@ async function getBedrockClient(): Promise<AnthropicBedrock> {
   if (!client) {
     const region = process.env.BEDROCK_REGION || process.env.AWS_REGION || "us-east-1";
 
-    // Try to get credentials from various sources
-    let credentials;
-    try {
-      // First try container metadata (ECS/Amplify)
-      const provider = fromContainerMetadata();
-      credentials = await provider();
-      console.log("[Bedrock] Got credentials from container metadata");
-    } catch {
-      try {
-        // Fall back to env vars
-        const envProvider = fromEnv();
-        credentials = await envProvider();
-        console.log("[Bedrock] Got credentials from env vars");
-      } catch {
-        console.log("[Bedrock] No credentials found, using default chain");
-      }
+    // Use BEDROCK_ prefixed env vars (to avoid AWS reserved name restrictions)
+    const accessKey = process.env.BEDROCK_ACCESS_KEY_ID;
+    const secretKey = process.env.BEDROCK_SECRET_ACCESS_KEY;
+
+    console.log("[Bedrock] Init with:", {
+      hasAccessKey: !!accessKey,
+      hasSecretKey: !!secretKey,
+      region,
+      allEnvKeys: Object.keys(process.env).filter(k => k.includes('BEDROCK')).join(',')
+    });
+
+    if (!accessKey || !secretKey) {
+      throw new Error(`Missing credentials: key=${!!accessKey}, secret=${!!secretKey}`);
     }
 
     client = new AnthropicBedrock({
       awsRegion: region,
-      ...(credentials && {
-        awsAccessKey: credentials.accessKeyId,
-        awsSecretKey: credentials.secretAccessKey,
-        awsSessionToken: credentials.sessionToken,
-      }),
+      awsAccessKey: accessKey,
+      awsSecretKey: secretKey,
     });
   }
   return client;
