@@ -94,22 +94,12 @@ let client: AnthropicBedrock | null = null;
 
 function getBedrockClient(): AnthropicBedrock {
   if (!client) {
-    // Use custom env var names to avoid AWS reserved name conflicts
-    const accessKey = process.env.BEDROCK_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID;
-    const secretKey = process.env.BEDROCK_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY;
     const region = process.env.BEDROCK_REGION || process.env.AWS_REGION || "us-east-1";
 
-    // Debug: log which env vars are present
-    console.log("[Bedrock] Initializing client with:", {
-      hasAccessKey: !!accessKey,
-      hasSecretKey: !!secretKey,
-      region,
-    });
-
+    // Use IAM role credentials (automatic in Amplify Lambda)
+    // Falls back to env vars if IAM role not available
     client = new AnthropicBedrock({
       awsRegion: region,
-      awsAccessKey: accessKey,
-      awsSecretKey: secretKey,
     });
   }
   return client;
@@ -246,12 +236,11 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Chat API error:", error);
 
-    // Temporary: include error details for debugging
+    // Keep debug for now until confirmed working
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    const envKeys = Object.keys(process.env).filter(k => k.includes('BEDROCK') || k.includes('AWS')).join(',');
 
     return NextResponse.json({
-      message: `Debug: ${errorMessage} | Relevant env keys: [${envKeys}]`,
+      message: `Debug: ${errorMessage}`,
       error: true,
     });
   }
