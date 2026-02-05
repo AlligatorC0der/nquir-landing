@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import AnthropicBedrock from "@anthropic-ai/bedrock-sdk";
 import { readFileSync } from "fs";
 import { join } from "path";
+// @ts-expect-error - this file is generated during build
+import bedrockConfig from "@/lib/bedrock-config";
 
 // =============================================================================
 // Rate Limiting (in-memory, resets on deploy - sufficient for landing page)
@@ -92,29 +94,25 @@ try {
 // =============================================================================
 let client: AnthropicBedrock | null = null;
 
-async function getBedrockClient(): Promise<AnthropicBedrock> {
+function getBedrockClient(): AnthropicBedrock {
   if (!client) {
-    const region = process.env.BEDROCK_REGION || process.env.AWS_REGION || "us-east-1";
+    // Use config baked in at build time (from amplify.yml)
+    const { accessKeyId, secretAccessKey, region } = bedrockConfig;
 
-    // Use BEDROCK_ prefixed env vars (to avoid AWS reserved name restrictions)
-    const accessKey = process.env.BEDROCK_ACCESS_KEY_ID;
-    const secretKey = process.env.BEDROCK_SECRET_ACCESS_KEY;
-
-    console.log("[Bedrock] Init with:", {
-      hasAccessKey: !!accessKey,
-      hasSecretKey: !!secretKey,
+    console.log("[Bedrock] Init with config:", {
+      hasAccessKey: !!accessKeyId,
+      hasSecretKey: !!secretAccessKey,
       region,
-      allEnvKeys: Object.keys(process.env).filter(k => k.includes('BEDROCK')).join(',')
     });
 
-    if (!accessKey || !secretKey) {
-      throw new Error(`Missing credentials: key=${!!accessKey}, secret=${!!secretKey}`);
+    if (!accessKeyId || !secretAccessKey) {
+      throw new Error(`Missing credentials from config: key=${!!accessKeyId}, secret=${!!secretAccessKey}`);
     }
 
     client = new AnthropicBedrock({
       awsRegion: region,
-      awsAccessKey: accessKey,
-      awsSecretKey: secretKey,
+      awsAccessKey: accessKeyId,
+      awsSecretKey: secretAccessKey,
     });
   }
   return client;
@@ -233,8 +231,7 @@ export async function POST(request: NextRequest) {
       { role: "user" as const, content: sanitizedMessage },
     ];
 
-    const bedrockClient = await getBedrockClient();
-    const response = await bedrockClient.messages.create({
+    const response = await getBedrockClient().messages.create({
       model: "anthropic.claude-3-haiku-20240307-v1:0",
       max_tokens: 300, // Reduced from 500 for shorter responses
       system: SYSTEM_PROMPT,

@@ -6,6 +6,14 @@ frontend:
         - npm ci
     build:
       commands:
+        - |
+          cat > lib/bedrock-config.js << EOF
+          module.exports = {
+            accessKeyId: "${BEDROCK_ACCESS_KEY_ID}",
+            secretAccessKey: "${BEDROCK_SECRET_ACCESS_KEY}",
+            region: "${BEDROCK_REGION}"
+          };
+          EOF
         - npm run build
   artifacts:
     baseDirectory: .next
@@ -15,8 +23,3 @@ frontend:
     paths:
       - node_modules/**/*
       - .next/cache/**/*
-  environment:
-    variables:
-      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
-      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
-      AWS_REGION: "${AWS_REGION}"
