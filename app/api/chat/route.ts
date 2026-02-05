@@ -90,13 +90,12 @@ try {
 // =============================================================================
 // Bedrock Client
 // =============================================================================
-// Use BEDROCK_* env vars (AWS_* prefix is reserved in Amplify)
-// Falls back to default credential chain (IAM role) if not set
 const client = new AnthropicBedrock({
-  awsRegion: process.env.BEDROCK_REGION || process.env.AWS_REGION || "us-east-1",
-  ...(process.env.BEDROCK_ACCESS_KEY_ID && {
-    awsAccessKey: process.env.BEDROCK_ACCESS_KEY_ID,
-    awsSecretKey: process.env.BEDROCK_SECRET_ACCESS_KEY,
+  awsRegion: process.env.AWS_REGION || "us-east-1",
+  ...(process.env.AWS_ACCESS_KEY_ID && {
+    awsAccessKey: process.env.AWS_ACCESS_KEY_ID,
+    awsSecretKey: process.env.AWS_SECRET_ACCESS_KEY,
+    awsSessionToken: process.env.AWS_SESSION_TOKEN,
   }),
 });
 
@@ -215,7 +214,7 @@ export async function POST(request: NextRequest) {
 
     const response = await client.messages.create({
       model: "anthropic.claude-3-haiku-20240307-v1:0",
-      max_tokens: 300,
+      max_tokens: 300, // Reduced from 500 for shorter responses
       system: SYSTEM_PROMPT,
       messages: messages,
     });
@@ -231,13 +230,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Chat API error:", error);
 
-    return NextResponse.json(
-      {
-        message:
-          "I'm having trouble connecting right now. Please try again in a moment.",
-        error: true,
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      message:
+        "I'm having trouble connecting right now. For questions about Nquir, please join our waitlist and our team will be happy to help!",
+      error: true,
+    });
   }
 }
