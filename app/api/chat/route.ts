@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import AnthropicBedrock from "@anthropic-ai/bedrock-sdk";
 import { readFileSync } from "fs";
 import { join } from "path";
-import bedrockConfig from "@/lib/bedrock-config";
 
 // =============================================================================
 // Rate Limiting (in-memory, resets on deploy - sufficient for landing page)
@@ -95,23 +94,10 @@ let client: AnthropicBedrock | null = null;
 
 function getBedrockClient(): AnthropicBedrock {
   if (!client) {
-    // Use config baked in at build time (from amplify.yml)
-    const { accessKeyId, secretAccessKey, region } = bedrockConfig;
-
-    console.log("[Bedrock] Init with config:", {
-      hasAccessKey: !!accessKeyId,
-      hasSecretKey: !!secretAccessKey,
-      region,
-    });
-
-    if (!accessKeyId || !secretAccessKey) {
-      throw new Error(`Missing credentials from config: key=${!!accessKeyId}, secret=${!!secretAccessKey}`);
-    }
-
+    // Let the SDK pick up AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+    // from environment variables automatically (set via amplify.yml)
     client = new AnthropicBedrock({
-      awsRegion: region,
-      awsAccessKey: accessKeyId,
-      awsSecretKey: secretAccessKey,
+      awsRegion: process.env.AWS_REGION || "us-east-1",
     });
   }
   return client;
@@ -232,7 +218,7 @@ export async function POST(request: NextRequest) {
 
     const response = await getBedrockClient().messages.create({
       model: "anthropic.claude-3-haiku-20240307-v1:0",
-      max_tokens: 300, // Reduced from 500 for shorter responses
+      max_tokens: 300,
       system: SYSTEM_PROMPT,
       messages: messages,
     });
@@ -248,12 +234,13 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Chat API error:", error);
 
-    // Keep debug for now until confirmed working
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-
-    return NextResponse.json({
-      message: `Debug: ${errorMessage}`,
-      error: true,
-    });
+    return NextResponse.json(
+      {
+        message:
+          "I'm having trouble connecting right now. Please try again in a moment.",
+        error: true,
+      },
+      { status: 500 }
+    );
   }
 }
