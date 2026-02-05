@@ -243,9 +243,11 @@ export async function POST(request: NextRequest) {
 
     // Temporary: include error details for debugging
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const hasKey = !!process.env.AWS_ACCESS_KEY_ID;
+    const hasSecret = !!process.env.AWS_SECRET_ACCESS_KEY;
 
     return NextResponse.json({
-      message: `Debug: ${errorMessage}`,
+      message: `Debug: ${errorMessage} | EnvVars: key=${hasKey}, secret=${hasSecret}`,
       error: true,
     });
   }
