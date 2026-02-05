@@ -230,9 +230,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Chat API error:", error);
 
+    // Temporary debug - show actual error
+    const errorMsg = error instanceof Error ? error.message : String(error);
     return NextResponse.json({
-      message:
-        "I'm having trouble connecting right now. For questions about Nquir, please join our waitlist and our team will be happy to help!",
+      message: `Debug: ${errorMsg}`,
       error: true,
     });
   }
