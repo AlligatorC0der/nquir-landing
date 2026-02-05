@@ -88,22 +88,23 @@ try {
 }
 
 // =============================================================================
-// Bedrock Client - Debug env vars then use BEDROCK_* explicitly
+// Bedrock Client - credentials baked in at build time via amplify.yml
 // =============================================================================
-const envDebug = {
-  hasBEDROCK_ACCESS_KEY_ID: !!process.env.BEDROCK_ACCESS_KEY_ID,
-  hasBEDROCK_SECRET_ACCESS_KEY: !!process.env.BEDROCK_SECRET_ACCESS_KEY,
-  hasBEDROCK_REGION: !!process.env.BEDROCK_REGION,
-  hasAWS_ACCESS_KEY_ID: !!process.env.AWS_ACCESS_KEY_ID,
-  hasAWS_REGION: !!process.env.AWS_REGION,
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const credentials = require("@/lib/bedrock-credentials");
+
+const credDebug = {
+  hasAccessKey: !!credentials.accessKeyId,
+  hasSecretKey: !!credentials.secretAccessKey,
+  region: credentials.region,
 };
-console.log("[Bedrock] Env vars:", envDebug);
+console.log("[Bedrock] Credentials:", credDebug);
 
 const client = new AnthropicBedrock({
-  awsRegion: process.env.BEDROCK_REGION || "us-east-1",
-  ...(process.env.BEDROCK_ACCESS_KEY_ID && {
-    awsAccessKey: process.env.BEDROCK_ACCESS_KEY_ID,
-    awsSecretKey: process.env.BEDROCK_SECRET_ACCESS_KEY,
+  awsRegion: credentials.region || "us-east-1",
+  ...(credentials.accessKeyId && {
+    awsAccessKey: credentials.accessKeyId,
+    awsSecretKey: credentials.secretAccessKey,
   }),
 });
 
@@ -238,10 +239,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Chat API error:", error);
 
-    // Temporary debug - show actual error + env status
+    // Temporary debug - show actual error + credential status
     const errorMsg = error instanceof Error ? error.message : String(error);
     return NextResponse.json({
-      message: `Debug: ${errorMsg} | Env: ${JSON.stringify(envDebug)}`,
+      message: `Debug: ${errorMsg} | Creds: ${JSON.stringify(credDebug)}`,
       error: true,
     });
   }
