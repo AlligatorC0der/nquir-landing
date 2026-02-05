@@ -88,14 +88,22 @@ try {
 }
 
 // =============================================================================
-// Bedrock Client
+// Bedrock Client - Debug env vars then use BEDROCK_* explicitly
 // =============================================================================
+const envDebug = {
+  hasBEDROCK_ACCESS_KEY_ID: !!process.env.BEDROCK_ACCESS_KEY_ID,
+  hasBEDROCK_SECRET_ACCESS_KEY: !!process.env.BEDROCK_SECRET_ACCESS_KEY,
+  hasBEDROCK_REGION: !!process.env.BEDROCK_REGION,
+  hasAWS_ACCESS_KEY_ID: !!process.env.AWS_ACCESS_KEY_ID,
+  hasAWS_REGION: !!process.env.AWS_REGION,
+};
+console.log("[Bedrock] Env vars:", envDebug);
+
 const client = new AnthropicBedrock({
-  awsRegion: process.env.AWS_REGION || "us-east-1",
-  ...(process.env.AWS_ACCESS_KEY_ID && {
-    awsAccessKey: process.env.AWS_ACCESS_KEY_ID,
-    awsSecretKey: process.env.AWS_SECRET_ACCESS_KEY,
-    awsSessionToken: process.env.AWS_SESSION_TOKEN,
+  awsRegion: process.env.BEDROCK_REGION || "us-east-1",
+  ...(process.env.BEDROCK_ACCESS_KEY_ID && {
+    awsAccessKey: process.env.BEDROCK_ACCESS_KEY_ID,
+    awsSecretKey: process.env.BEDROCK_SECRET_ACCESS_KEY,
   }),
 });
 
@@ -230,10 +238,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Chat API error:", error);
 
-    // Temporary debug - show actual error
+    // Temporary debug - show actual error + env status
     const errorMsg = error instanceof Error ? error.message : String(error);
     return NextResponse.json({
-      message: `Debug: ${errorMsg}`,
+      message: `Debug: ${errorMsg} | Env: ${JSON.stringify(envDebug)}`,
       error: true,
     });
   }
