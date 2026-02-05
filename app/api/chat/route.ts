@@ -97,7 +97,7 @@ function getBedrockClient(): AnthropicBedrock {
     // Use custom env var names to avoid AWS reserved name conflicts
     const accessKey = process.env.BEDROCK_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID;
     const secretKey = process.env.BEDROCK_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY;
-    const region = process.env.AWS_REGION || "us-east-1";
+    const region = process.env.BEDROCK_REGION || process.env.AWS_REGION || "us-east-1";
 
     // Debug: log which env vars are present
     console.log("[Bedrock] Initializing client with:", {
