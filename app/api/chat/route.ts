@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import AnthropicBedrock from "@anthropic-ai/bedrock-sdk";
+import { fromEnv, fromContainerMetadata } from "@aws-sdk/credential-providers";
 import { readFileSync } from "fs";
 import { join } from "path";
 
@@ -92,14 +93,35 @@ try {
 // =============================================================================
 let client: AnthropicBedrock | null = null;
 
-function getBedrockClient(): AnthropicBedrock {
+async function getBedrockClient(): Promise<AnthropicBedrock> {
   if (!client) {
     const region = process.env.BEDROCK_REGION || process.env.AWS_REGION || "us-east-1";
 
-    // Use IAM role credentials (automatic in Amplify Lambda)
-    // Falls back to env vars if IAM role not available
+    // Try to get credentials from various sources
+    let credentials;
+    try {
+      // First try container metadata (ECS/Amplify)
+      const provider = fromContainerMetadata();
+      credentials = await provider();
+      console.log("[Bedrock] Got credentials from container metadata");
+    } catch {
+      try {
+        // Fall back to env vars
+        const envProvider = fromEnv();
+        credentials = await envProvider();
+        console.log("[Bedrock] Got credentials from env vars");
+      } catch {
+        console.log("[Bedrock] No credentials found, using default chain");
+      }
+    }
+
     client = new AnthropicBedrock({
       awsRegion: region,
+      ...(credentials && {
+        awsAccessKey: credentials.accessKeyId,
+        awsSecretKey: credentials.secretAccessKey,
+        awsSessionToken: credentials.sessionToken,
+      }),
     });
   }
   return client;
@@ -218,7 +240,8 @@ export async function POST(request: NextRequest) {
       { role: "user" as const, content: sanitizedMessage },
     ];
 
-    const response = await getBedrockClient().messages.create({
+    const bedrockClient = await getBedrockClient();
+    const response = await bedrockClient.messages.create({
       model: "anthropic.claude-3-haiku-20240307-v1:0",
       max_tokens: 300, // Reduced from 500 for shorter responses
       system: SYSTEM_PROMPT,
