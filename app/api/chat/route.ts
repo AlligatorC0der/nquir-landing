@@ -248,11 +248,10 @@ export async function POST(request: NextRequest) {
 
     // Temporary: include error details for debugging
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    const hasKey = !!(process.env.BEDROCK_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID);
-    const hasSecret = !!(process.env.BEDROCK_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY);
+    const envKeys = Object.keys(process.env).filter(k => k.includes('BEDROCK') || k.includes('AWS')).join(',');
 
     return NextResponse.json({
-      message: `Debug: ${errorMessage} | EnvVars: key=${hasKey}, secret=${hasSecret}`,
+      message: `Debug: ${errorMessage} | Relevant env keys: [${envKeys}]`,
       error: true,
     });
   }
