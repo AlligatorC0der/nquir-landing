@@ -90,8 +90,7 @@ try {
 // =============================================================================
 // Bedrock Client - credentials baked in at build time via amplify.yml
 // =============================================================================
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const credentials = require("@/lib/bedrock-credentials");
+import credentials from "@/lib/bedrock-credentials";
 
 const credDebug = {
   hasAccessKey: !!credentials.accessKeyId,
