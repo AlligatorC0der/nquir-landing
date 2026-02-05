@@ -214,9 +214,15 @@ export async function POST(request: NextRequest) {
         content: sanitizeMessage(msg.content),
       }));
 
-    // Build messages array
+    // Build messages array - ensure first message is from "user"
+    // Filter history to remove any leading assistant messages
+    let filteredHistory = sanitizedHistory;
+    while (filteredHistory.length > 0 && filteredHistory[0].role === "assistant") {
+      filteredHistory = filteredHistory.slice(1);
+    }
+
     const messages: Message[] = [
-      ...sanitizedHistory,
+      ...filteredHistory,
       { role: "user" as const, content: sanitizedMessage },
     ];
 
