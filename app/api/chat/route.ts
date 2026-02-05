@@ -94,17 +94,22 @@ let client: AnthropicBedrock | null = null;
 
 function getBedrockClient(): AnthropicBedrock {
   if (!client) {
+    // Use custom env var names to avoid AWS reserved name conflicts
+    const accessKey = process.env.BEDROCK_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID;
+    const secretKey = process.env.BEDROCK_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY;
+    const region = process.env.AWS_REGION || "us-east-1";
+
     // Debug: log which env vars are present
     console.log("[Bedrock] Initializing client with:", {
-      hasAccessKey: !!process.env.AWS_ACCESS_KEY_ID,
-      hasSecretKey: !!process.env.AWS_SECRET_ACCESS_KEY,
-      region: process.env.AWS_REGION || "us-east-1",
+      hasAccessKey: !!accessKey,
+      hasSecretKey: !!secretKey,
+      region,
     });
 
     client = new AnthropicBedrock({
-      awsRegion: process.env.AWS_REGION || "us-east-1",
-      awsAccessKey: process.env.AWS_ACCESS_KEY_ID,
-      awsSecretKey: process.env.AWS_SECRET_ACCESS_KEY,
+      awsRegion: region,
+      awsAccessKey: accessKey,
+      awsSecretKey: secretKey,
     });
   }
   return client;
@@ -243,8 +248,8 @@ export async function POST(request: NextRequest) {
 
     // Temporary: include error details for debugging
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    const hasKey = !!process.env.AWS_ACCESS_KEY_ID;
-    const hasSecret = !!process.env.AWS_SECRET_ACCESS_KEY;
+    const hasKey = !!(process.env.BEDROCK_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID);
+    const hasSecret = !!(process.env.BEDROCK_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY);
 
     return NextResponse.json({
       message: `Debug: ${errorMessage} | EnvVars: key=${hasKey}, secret=${hasSecret}`,
