@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import AnthropicBedrock from "@anthropic-ai/bedrock-sdk";
 import { readFileSync } from "fs";
 import { join } from "path";
-// @ts-expect-error - this file is generated during build
 import bedrockConfig from "@/lib/bedrock-config";
 
 // =============================================================================
