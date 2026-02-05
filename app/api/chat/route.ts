@@ -92,13 +92,6 @@ try {
 // =============================================================================
 import credentials from "@/lib/bedrock-credentials";
 
-const credDebug = {
-  hasAccessKey: !!credentials.accessKeyId,
-  hasSecretKey: !!credentials.secretAccessKey,
-  region: credentials.region,
-};
-console.log("[Bedrock] Credentials:", credDebug);
-
 const client = new AnthropicBedrock({
   awsRegion: credentials.region || "us-east-1",
   ...(credentials.accessKeyId && {
@@ -244,10 +237,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Chat API error:", error);
 
-    // Temporary debug - show actual error + credential status
-    const errorMsg = error instanceof Error ? error.message : String(error);
     return NextResponse.json({
-      message: `Debug: ${errorMsg} | Creds: ${JSON.stringify(credDebug)}`,
+      message:
+        "I'm having trouble connecting right now. Please try again in a moment.",
       error: true,
     });
   }

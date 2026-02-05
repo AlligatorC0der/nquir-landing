@@ -66,24 +66,40 @@ The Q&A bot on nquir-landing stopped working due to AWS credential loading failu
 
 ## Resolution
 
-**Delete all the "fixes" and return to the original working state.**
+**Bake credentials at build time via `amplify.yml`.**
 
-The bot was working before `a2069a1`. The fix was simply:
-```bash
-git rm amplify.yml  # Didn't exist before today
-# Restore original simple client initialization
+Root cause discovery: Amplify Console environment variables do NOT reach SSR Lambda runtime. Only `AWS_REGION` is automatically provided.
+
+The fix:
+1. Create `amplify.yml` that generates `lib/bedrock-credentials.js` during build with actual credential values
+2. Import credentials from this file instead of reading env vars at runtime
+
+**amplify.yml:**
+```yaml
+build:
+  commands:
+    - |
+      cat > lib/bedrock-credentials.js << ENDOFFILE
+      module.exports = {
+        accessKeyId: "${BEDROCK_ACCESS_KEY_ID}",
+        secretAccessKey: "${BEDROCK_SECRET_ACCESS_KEY}",
+        region: "${BEDROCK_REGION}"
+      };
+      ENDOFFILE
+    - npm run build
 ```
 
-Final working code:
+**route.ts:**
 ```typescript
-function getBedrockClient(): AnthropicBedrock {
-  if (!client) {
-    client = new AnthropicBedrock({
-      awsRegion: process.env.AWS_REGION || "us-east-1",
-    });
-  }
-  return client;
-}
+import credentials from "@/lib/bedrock-credentials";
+
+const client = new AnthropicBedrock({
+  awsRegion: credentials.region || "us-east-1",
+  ...(credentials.accessKeyId && {
+    awsAccessKey: credentials.accessKeyId,
+    awsSecretKey: credentials.secretAccessKey,
+  }),
+});
 ```
 
 ---

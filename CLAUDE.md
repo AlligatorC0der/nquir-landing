@@ -10,17 +10,26 @@ Marketing landing page for Nquir with an AI-powered FAQ chatbot.
 
 ## Critical: How Credentials Work
 
-**The Bedrock SDK uses the default AWS credential chain. DO NOT override this.**
+**Amplify Console env vars do NOT reach SSR Lambda runtime.** Credentials are baked at build time.
 
 ```typescript
-// CORRECT - let SDK use IAM role from Amplify compute environment
-new AnthropicBedrock({ awsRegion: "us-east-1" })
+// Credentials imported from build-time generated file
+import credentials from "@/lib/bedrock-credentials";
 
-// WRONG - don't explicitly pass credentials
-new AnthropicBedrock({ awsAccessKey: "...", awsSecretKey: "..." })
+const client = new AnthropicBedrock({
+  awsRegion: credentials.region,
+  awsAccessKey: credentials.accessKeyId,
+  awsSecretKey: credentials.secretAccessKey,
+});
 ```
 
-Amplify's SSR compute environment has an IAM role attached that grants Bedrock access. The SDK automatically discovers and uses this role. No `amplify.yml` environment variables needed.
+**How it works:**
+1. `BEDROCK_ACCESS_KEY_ID`, `BEDROCK_SECRET_ACCESS_KEY`, `BEDROCK_REGION` set in Amplify Console
+2. `amplify.yml` generates `lib/bedrock-credentials.js` during build with actual values
+3. File gets bundled with Next.js SSR build
+4. Route imports credentials from bundled file at runtime
+
+**Do NOT** rely on `process.env.BEDROCK_*` at runtime - they won't be available.
 
 ---
 
