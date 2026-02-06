@@ -136,6 +136,67 @@ Nquir provides transparency tools so you can evaluate AI output:
 
 ---
 
+## Evidence Evaluation Framework
+
+**How does Nquir evaluate evidence?**
+Nquir uses a formal evidence evaluation framework based on cross-sector professional standards. Every piece of evidence is assessed against ten quality criteria used in oversight, audit, compliance, and investigative work.
+
+**What are the ten quality criteria?**
+1. **Relevance** - Does the evidence connect to the question being examined?
+2. **Reliability** - Is the source trustworthy and free from bias?
+3. **Sufficiency** - Is there enough evidence to support a conclusion?
+4. **Validity** - Does this evidence actually prove what it's offered to prove?
+5. **Competence** - Is the source qualified? Was evidence properly collected?
+6. **Completeness** - Does the evidence cover the matter thoroughly?
+7. **Timeliness** - Was the evidence created at an appropriate time?
+8. **Objectivity** - Is this fact-based or opinion-based?
+9. **Authenticity** - Is this evidence genuine and verifiable?
+10. **Consistency** - Does this align with other evidence?
+
+**Why does this matter?**
+This creates a documented reasoning chain that you can verify. The AI doesn't just summarize—it systematically applies professional standards and explicitly states which criteria each piece of evidence satisfies.
+
+---
+
+## Quality Metrics & Transparency
+
+**What quality metrics does Nquir provide?**
+Nquir includes three automated quality checks for every AI analysis:
+
+1. **Faithfulness Score** - Are claims in the analysis actually supported by your evidence? A separate process examines each factual claim and checks for evidence support.
+
+2. **Coverage Score** - Does the analysis address all parts of your question? The system breaks your question into elements and checks if each is addressed.
+
+3. **Retrieval Quality** - How relevant was the evidence found? Indicates whether the AI had strong, reasonable, or limited evidence to work with.
+
+**What do the confidence levels mean?**
+- **Established**: Strong, sufficient, convergent evidence
+- **Probable**: Good evidence with minor gaps
+- **Possible**: Some evidence but significant gaps
+- **Insufficient**: Evidence too weak or incomplete to conclude
+- **Contradicted**: Evidence weighs against this conclusion
+
+---
+
+## AI Limitations
+
+**What can't the AI do?**
+Being clear about limitations is important:
+
+- **Does not make determinations** - The AI provides analysis; you make findings
+- **Does not access external information** - Only works with evidence you've uploaded
+- **Does not guarantee accuracy** - Quality checks catch many issues, but verification is essential
+- **Does not provide legal advice** - Consult qualified counsel for legal matters
+- **Does not replace professional skills** - Cannot assess witness credibility, conduct interviews, or exercise discretion
+
+**What happens with very large evidence sets?**
+The AI can process substantial amounts of text, but for very large collections the most relevant evidence is prioritized. Quality metrics indicate when limitations may affect analysis.
+
+**Is my data used to train AI models?**
+No. Your inquiry data is processed to generate your analysis but is never used to train or improve AI models
+
+---
+
 ## Support
 
 **How can I get help?**
