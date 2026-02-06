@@ -400,7 +400,7 @@ export default function Home() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <input
                   type="email"
-                  placeholder="you@agency.gov"
+                  placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
